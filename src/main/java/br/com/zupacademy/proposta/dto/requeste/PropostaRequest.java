@@ -48,6 +48,10 @@ public class PropostaRequest {
         this.salario = salario;
     }
 
+    public String getDocumento() {
+        return documento;
+    }
+
     public Proposta toModel() {
         Endereco estado = new Endereco(this.rua, this.bairro, this.cidade, this.estado, this.numero);
         return new Proposta(this.documento, this.email, this.nome, estado, this.salario);

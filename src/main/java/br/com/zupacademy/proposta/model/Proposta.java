@@ -1,6 +1,7 @@
 package br.com.zupacademy.proposta.model;
 
 import br.com.zupacademy.proposta.config.validator.bean.Document;
+import br.com.zupacademy.proposta.repository.PropostaRepository;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -31,7 +32,11 @@ public class Proposta {
     @Positive
     private BigDecimal salario;
 
-    public Proposta(String documento, String email, String nome, Endereco endereco,BigDecimal salario) {
+    @Deprecated
+    public Proposta() {
+    }
+
+    public Proposta(String documento, String email, String nome, Endereco endereco, BigDecimal salario) {
         this.documento = documento;
         this.email = email;
         this.nome = nome;
@@ -41,5 +46,9 @@ public class Proposta {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean verificaDocumentoExistente(PropostaRepository propostaRepository) {
+        return propostaRepository.findByDocumento(this.documento).isPresent();
     }
 }
