@@ -28,7 +28,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: pede99
     ports:
-      - "3308:3306"
+      - "3309:3306"
     volumes:
       - mercado_livre_data:/var/lib/mysql
 
