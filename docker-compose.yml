@@ -32,6 +32,18 @@ services:
     volumes:
       - mercado_livre_data:/var/lib/mysql
 
+  postgres:
+    image: 'postgres:alpine'
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloak
+      POSTGRES_HOST: postgres
+
   keycloak:
     image: jboss/keycloak:11.0.0
     ports:
@@ -136,3 +148,4 @@ volumes:
   grafana-volume:
   prometheus-volume:
   mercado_livre_data:
+  postgres-volume:

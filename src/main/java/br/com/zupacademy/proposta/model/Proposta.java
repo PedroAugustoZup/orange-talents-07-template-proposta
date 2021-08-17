@@ -1,8 +1,11 @@
 package br.com.zupacademy.proposta.model;
 
+import br.com.zupacademy.proposta.clients.AnaliseFinanceiraClient;
 import br.com.zupacademy.proposta.config.validator.bean.Document;
+import br.com.zupacademy.proposta.dto.requeste.VerificaFinanceiroRequest;
 import br.com.zupacademy.proposta.model.enums.EstadoProposta;
 import br.com.zupacademy.proposta.repository.PropostaRepository;
+import feign.FeignException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,23 +21,30 @@ public class Proposta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     @Document
     private String documento;
+
     @NotBlank
     @Email
     private String email;
+
     @NotBlank
     private String nome;
+
     @Embedded
     @NotNull
     private Endereco endereco;
+
     @NotNull
     @Positive
     private BigDecimal salario;
 
     @Enumerated(EnumType.STRING)
     private EstadoProposta estadoProposta;
+
+    private String idCartao;
 
     @Deprecated
     public Proposta() {
@@ -52,8 +62,15 @@ public class Proposta {
         return id;
     }
 
-    public void setEstadoProposta(EstadoProposta estadoProposta) {
-        this.estadoProposta = estadoProposta;
+    public void setEstadoProposta(AnaliseFinanceiraClient analiseFinanceiraClient) {
+        try {
+            EstadoProposta estado = analiseFinanceiraClient.analisa(new VerificaFinanceiroRequest(this).getMapa())
+                    .getResultadoSolicitacao()
+                    .getEnums();
+            this.estadoProposta = estado;
+        }catch (FeignException e){
+            this.estadoProposta = EstadoProposta.NAO_ELEGIVEL;
+        }
     }
 
     public String getDocumento() {
@@ -62,6 +79,18 @@ public class Proposta {
 
     public String getNome() {
         return nome;
+    }
+
+    public EstadoProposta getEstadoProposta() {
+        return estadoProposta;
+    }
+
+    public void setIdCartao(String idCartao) {
+        this.idCartao = idCartao;
+    }
+
+    public String getIdCartao() {
+        return idCartao;
     }
 
     public boolean verificaDocumentoExistente(PropostaRepository propostaRepository) {
