@@ -44,13 +44,15 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private EstadoProposta estadoProposta;
 
-    private String idCartao;
+    @OneToOne(mappedBy = "proposta")
+    private Cartao cartao;
 
     @Deprecated
     public Proposta() {
     }
 
-    public Proposta(String documento, String email, String nome, Endereco endereco, BigDecimal salario) {
+    public Proposta(String documento, String email, String nome, Endereco endereco,
+                    BigDecimal salario) {
         this.documento = documento;
         this.email = email;
         this.nome = nome;
@@ -85,12 +87,12 @@ public class Proposta {
         return estadoProposta;
     }
 
-    public void setIdCartao(String idCartao) {
-        this.idCartao = idCartao;
+    public Cartao getCartao() {
+        return cartao;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
 
     public boolean verificaDocumentoExistente(PropostaRepository propostaRepository) {

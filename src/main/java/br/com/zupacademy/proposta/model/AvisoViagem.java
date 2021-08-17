@@ -1,8 +1,16 @@
-package br.com.zupacademy.proposta.dto.response;
+package br.com.zupacademy.proposta.model;
 
+import javax.persistence.*;
+
+@Entity
 public class AvisoViagem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String validoAte;
     private String destino;
+    @ManyToOne
+    private Cartao cartao;
 
     public AvisoViagem(String validoAte, String destino) {
         this.validoAte = validoAte;

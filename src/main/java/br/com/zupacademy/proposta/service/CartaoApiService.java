@@ -1,6 +1,8 @@
 package br.com.zupacademy.proposta.service;
 
 import br.com.zupacademy.proposta.clients.CartoesClient;
+import br.com.zupacademy.proposta.dto.response.ApiCartaoResponse;
+import br.com.zupacademy.proposta.model.Cartao;
 import br.com.zupacademy.proposta.model.Proposta;
 import br.com.zupacademy.proposta.model.enums.EstadoProposta;
 import br.com.zupacademy.proposta.repository.PropostaRepository;
@@ -33,13 +35,13 @@ public class CartaoApiService {
     @Scheduled(fixedDelay = delay)
     public void buscaCartao(){
         transactional.execute(()->{
-            List<Proposta> lista = manager.createQuery("select p from Proposta p where p.idCartao is null and p.estadoProposta = :estadoProposta")
-                    .setParameter("estadoProposta", EstadoProposta.ELEGIVEL)
-                    .getResultList();
-            lista.forEach(item -> {
-                if(item.getIdCartao() == null){
-                    item.setIdCartao(cartoesClient.salvaNumeroCartao(String.valueOf(item.getId())).getId());
-                    propostaRepository.save(item);
+            List<Proposta> lista = propostaRepository.findByCartaoIsNullAndEstadoPropostaIs(EstadoProposta.ELEGIVEL);
+            lista.forEach(System.out::println);
+            lista.forEach(proposta -> {
+                if(proposta.getCartao() == null){
+                    ApiCartaoResponse cartaoResponse = cartoesClient.salvaNumeroCartao(String.valueOf(proposta.getId()));
+                    Cartao cartao = cartaoResponse.toModel(proposta);
+                    manager.persist(cartao);
                 }
             });
         });

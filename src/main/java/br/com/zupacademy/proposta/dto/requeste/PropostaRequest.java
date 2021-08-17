@@ -53,7 +53,7 @@ public class PropostaRequest {
     }
 
     public Proposta toModel() {
-        Endereco estado = new Endereco(this.rua, this.bairro, this.cidade, this.estado, this.numero);
-        return new Proposta(this.documento, this.email, this.nome, estado, this.salario);
+        Endereco endereco = new Endereco(this.rua, this.bairro, this.cidade, this.estado, this.numero);
+        return new Proposta(this.documento, this.email, this.nome, endereco, this.salario);
     }
 }
