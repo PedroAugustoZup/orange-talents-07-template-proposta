@@ -12,6 +12,10 @@ public class AvisoViagem {
     @ManyToOne
     private Cartao cartao;
 
+    @Deprecated
+    public AvisoViagem() {
+    }
+
     public AvisoViagem(String validoAte, String destino) {
         this.validoAte = validoAte;
         this.destino = destino;

@@ -56,6 +56,6 @@ public class PropostaController {
         if(proposta.isEmpty())
             return ResponseEntity.status(404).build();
 
-        return ResponseEntity.ok(new PropostaResponse());
+        return ResponseEntity.ok(new PropostaResponse(proposta.get()));
     }
 }

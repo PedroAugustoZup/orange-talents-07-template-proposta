@@ -33,6 +33,10 @@ public class Cartao {
     @OneToOne(cascade = CascadeType.ALL)
     private Proposta proposta;
 
+    @Deprecated
+    public Cartao() {
+    }
+
     public Cartao(String id, String emitidoEm, String titular, List<Bloqueio> bloqueios,
                   List<AvisoViagem> avisos, List<CarteiraDigital> carteiras, List<Parcela> parcelas,
                   Integer limite, Renegociacao renegociacao, Vencimento vencimento, Proposta proposta) {

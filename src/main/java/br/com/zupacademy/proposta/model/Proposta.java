@@ -91,6 +91,18 @@ public class Proposta {
         return cartao;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public BigDecimal getSalario() {
+        return salario;
+    }
+
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
     }

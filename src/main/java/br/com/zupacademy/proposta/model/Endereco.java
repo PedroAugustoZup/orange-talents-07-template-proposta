@@ -30,4 +30,24 @@ public class Endereco {
         this.estado = estado;
         this.numero = numero;
     }
+
+    public String getRua() {
+        return rua;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
 }

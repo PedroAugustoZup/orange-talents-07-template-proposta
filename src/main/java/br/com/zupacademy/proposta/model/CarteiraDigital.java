@@ -14,6 +14,10 @@ public class CarteiraDigital {
     @ManyToOne
     private Cartao cartao;
 
+    @Deprecated
+    public CarteiraDigital() {
+    }
+
     public CarteiraDigital(String idCarteiraDigital, String email, String associadaEm, String emissor) {
         this.idCarteiraDigital = idCarteiraDigital;
         this.email = email;

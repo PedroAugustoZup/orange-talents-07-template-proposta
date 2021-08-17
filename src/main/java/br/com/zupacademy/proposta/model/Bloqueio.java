@@ -15,6 +15,10 @@ public class Bloqueio {
     @ManyToOne
     private Cartao cartao;
 
+    @Deprecated
+    public Bloqueio() {
+    }
+
     public Bloqueio(String idBloqueio, String bloqueadoEm, String sistemaResponsavel, boolean ativo) {
         this.idBloqueio = idBloqueio;
         this.bloqueadoEm = bloqueadoEm;

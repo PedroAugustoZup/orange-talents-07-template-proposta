@@ -13,6 +13,10 @@ public class Parcela {
     @ManyToOne
     private Cartao cartao;
 
+    @Deprecated
+    public Parcela() {
+    }
+
     public Parcela(String idParcela, Integer quantidade, Number valor) {
         this.idParcela = idParcela;
         this.quantidade = quantidade;

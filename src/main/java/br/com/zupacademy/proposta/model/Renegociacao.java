@@ -16,6 +16,10 @@ public class Renegociacao {
     private Number valor;
     private String dataDeCriacao;
 
+    @Deprecated
+    public Renegociacao() {
+    }
+
     public Renegociacao(String idRenegociacao, Integer quantidade, Number valor, String dataDeCriacao) {
         this.idRenegociacao = idRenegociacao;
         this.quantidade = quantidade;

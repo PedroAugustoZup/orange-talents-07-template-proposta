@@ -15,6 +15,10 @@ public class Vencimento {
     private Integer dia;
     private String dataDeCriacao;
 
+    @Deprecated
+    public Vencimento() {
+    }
+
     public Vencimento(String idVencimento, Integer dia, String dataDeCriacao) {
         this.idVencimento = idVencimento;
         this.dia = dia;
