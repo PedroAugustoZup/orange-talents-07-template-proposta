@@ -36,7 +36,6 @@ public class CartaoApiService {
     public void buscaCartao(){
         transactional.execute(()->{
             List<Proposta> lista = propostaRepository.findByCartaoIsNullAndEstadoPropostaIs(EstadoProposta.ELEGIVEL);
-            lista.forEach(System.out::println);
             lista.forEach(proposta -> {
                 if(proposta.getCartao() == null){
                     ApiCartaoResponse cartaoResponse = cartoesClient.salvaNumeroCartao(String.valueOf(proposta.getId()));

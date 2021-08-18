@@ -10,6 +10,8 @@ services:
       DATABASE_URL: jdbc:mysql://mysql:3306/proposta?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: pede99
+      API_CARTOES_URL: http://contas:8888/api
+      API_FINANCEIRA_URL: http://analise:9999/api
     networks:
       - minha-network
 

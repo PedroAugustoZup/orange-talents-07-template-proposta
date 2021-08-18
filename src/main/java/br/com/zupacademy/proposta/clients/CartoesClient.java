@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "cartoesClient",url = "http://localhost:8888/api")
+@FeignClient(name = "cartoesClient",url = "${API_CARTOES_URL:http://localhost:8888/api}")
 public interface CartoesClient {
     @GetMapping("/cartoes")
     ApiCartaoResponse salvaNumeroCartao(@RequestParam String idProposta);

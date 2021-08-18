@@ -33,6 +33,9 @@ public class Cartao {
     @OneToOne(cascade = CascadeType.ALL)
     private Proposta proposta;
 
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+    private List<Biometria> biometria;
+
     @Deprecated
     public Cartao() {
     }
