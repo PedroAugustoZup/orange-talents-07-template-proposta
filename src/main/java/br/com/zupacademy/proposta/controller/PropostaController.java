@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class PropostaController {
     @Autowired
     private TransactionalEvent transactional;
 
+    @RolesAllowed("user")
     @PostMapping
     public ResponseEntity<?> salvar(@RequestBody @Valid PropostaRequest request,
                                     UriComponentsBuilder uriBuilder){
@@ -49,8 +51,9 @@ public class PropostaController {
         return ResponseEntity.created(uri).build();
     }
 
+    @RolesAllowed("user")
     @GetMapping("/{id}")
-    public ResponseEntity<?> listar(@PathVariable("id") Long id){
+    public ResponseEntity<?> listar(@PathVariable("id") Long id, @RequestHeader String Authorization){
         Optional<Proposta> proposta = propostaRepository.findById(id);
 
         if(proposta.isEmpty())

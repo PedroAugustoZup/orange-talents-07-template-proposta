@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class CartaoController {
     @Autowired
     private TransactionalEvent transactionalEvent;
 
+    @RolesAllowed("user")
     @PostMapping("/biometria/{id}")
     public ResponseEntity<?> salvaBiometria(@PathVariable("id")Long id,
                                             @RequestBody @Valid BiometriaRequest request,
