@@ -51,9 +51,8 @@ public class PropostaController {
         return ResponseEntity.created(uri).build();
     }
 
-    @RolesAllowed("user")
     @GetMapping("/{id}")
-    public ResponseEntity<?> listar(@PathVariable("id") Long id, @RequestHeader String Authorization){
+    public ResponseEntity<?> listar(@PathVariable("id") Long id){
         Optional<Proposta> proposta = propostaRepository.findById(id);
 
         if(proposta.isEmpty())
