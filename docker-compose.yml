@@ -14,8 +14,9 @@ services:
       API_CARTOES_URL: http://contas:8888/api
       API_FINANCEIRA_URL: http://analise:9999/api
       AUTH_SERVER_REALM: proposta-container
-      AUTH_SERVER_URL: http://keycloak:8080
-
+      AUTH_SERVER_URL: http://keycloak:8080/auth
+      AUTH_SERVER_CLIENT: proposta-api-container
+      AUTH_SERVER_CREDENTIALS_SECRET: 284133e3-3e4e-45e3-92aa-9380d75c8d41
   db:
     image: mysql
     container_name: mysql
