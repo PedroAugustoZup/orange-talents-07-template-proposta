@@ -5,6 +5,7 @@ import br.com.zupacademy.proposta.model.Biometria;
 import br.com.zupacademy.proposta.model.Cartao;
 import br.com.zupacademy.proposta.repository.BiometriaRepository;
 import br.com.zupacademy.proposta.repository.CartaoRepository;
+import br.com.zupacademy.proposta.service.CartaoApiService;
 import br.com.zupacademy.proposta.service.TransactionalEvent;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Optional;
 
@@ -30,15 +32,19 @@ public class CartaoController {
     @Autowired
     private TransactionalEvent transactionalEvent;
 
-    @RolesAllowed("user")
-    @PostMapping("/biometria/{id}")
-    public ResponseEntity<?> salvaBiometria(@PathVariable("id")Long id,
+    @Autowired
+    private CartaoApiService cartaoService;
+
+    @Autowired
+    private HttpServletRequest servletRequest;
+
+    @PostMapping("/{id}/biometria")
+    public ResponseEntity<?> salvaBiometria(@PathVariable("id") Long id,
                                             @RequestBody @Valid BiometriaRequest request,
                                             UriComponentsBuilder uriBuilder){
         Optional<Cartao> cartao = cartaoRepository.findById(id);
         if(cartao.isEmpty())
             return ResponseEntity.status(404).build();
-
         if(!Base64.isBase64(request.getCodigo()))
             return ResponseEntity.status(400).build();
 
@@ -49,5 +55,17 @@ public class CartaoController {
         });
         URI uri = uriBuilder.path("/biometria/lista/{id}").buildAndExpand(biometriaEntidade.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping("/{id}/bloqueio")
+    public ResponseEntity<?> bloqueio(@PathVariable("id") @Valid @NotNull Long id){
+        Optional<Cartao> cartao = cartaoRepository.findById(id);
+        if(cartao.isEmpty()) return ResponseEntity.status(404).build();
+
+        String usuario = servletRequest.getHeader("User-Agent");
+        String ipAddress = servletRequest.getRemoteAddr();
+
+        return ResponseEntity.status(cartaoService.bloqueiaCartao(cartao.get(), usuario, ipAddress))
+                .build();
     }
 }

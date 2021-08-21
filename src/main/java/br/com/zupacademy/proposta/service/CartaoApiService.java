@@ -1,7 +1,10 @@
 package br.com.zupacademy.proposta.service;
 
 import br.com.zupacademy.proposta.clients.CartoesClient;
+import br.com.zupacademy.proposta.dto.requeste.BloqueioRequest;
 import br.com.zupacademy.proposta.dto.response.ApiCartaoResponse;
+import br.com.zupacademy.proposta.dto.response.BloqueioResponse;
+import br.com.zupacademy.proposta.model.Bloqueio;
 import br.com.zupacademy.proposta.model.Cartao;
 import br.com.zupacademy.proposta.model.Proposta;
 import br.com.zupacademy.proposta.model.enums.EstadoProposta;
@@ -44,5 +47,22 @@ public class CartaoApiService {
                 }
             });
         });
+    }
+
+    public int bloqueiaCartao(Cartao cartao, String usuario, String ipAddress){
+        for (Bloqueio bloqueio : cartao.getBloqueios()) {
+            if(bloqueio.isAtivo()) return 422;
+        }
+        BloqueioResponse response = cartoesClient.geraBloqueioCartao(cartao.getNumeroCartao(),
+                new BloqueioRequest("proposta"));
+
+        if(response.getResultado().equals("BLOQUEADO")){
+            Bloqueio bloqueio = new Bloqueio(cartao,usuario, ipAddress);
+            transactional.execute(()->{
+                manager.persist(bloqueio);
+            });
+            return 200;
+        }
+        return 400;
     }
 }

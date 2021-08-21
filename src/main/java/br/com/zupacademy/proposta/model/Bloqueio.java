@@ -1,6 +1,9 @@
 package br.com.zupacademy.proposta.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 public class Bloqueio {
@@ -9,28 +12,38 @@ public class Bloqueio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String idBloqueio;
-    private String bloqueadoEm;
+    private Instant bloqueadoEm;
     private String sistemaResponsavel;
     private boolean ativo;
     @ManyToOne
     private Cartao cartao;
+    private String ipCliente;
+    private String userCliente;
 
     @Deprecated
     public Bloqueio() {
     }
 
-    public Bloqueio(String idBloqueio, String bloqueadoEm, String sistemaResponsavel, boolean ativo) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Bloqueio(String idBloqueio, String sistemaResponsavel, boolean ativo) {
         this.idBloqueio = idBloqueio;
-        this.bloqueadoEm = bloqueadoEm;
         this.sistemaResponsavel = sistemaResponsavel;
         this.ativo = ativo;
     }
+
+    public Bloqueio(Cartao cartao, String usuario, String ipAddress) {
+        this.cartao = cartao;
+        this.userCliente = usuario;
+        this.ipCliente = ipAddress;
+        this.bloqueadoEm = Instant.now();
+    }
+
 
     public String getIdBloqueio() {
         return idBloqueio;
     }
 
-    public String getBloqueadoEm() {
+    public Instant getBloqueadoEm() {
         return bloqueadoEm;
     }
 

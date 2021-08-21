@@ -1,5 +1,7 @@
 package br.com.zupacademy.proposta.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ public class Cartao {
     public Cartao() {
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Cartao(String id, String emitidoEm, String titular, List<Bloqueio> bloqueios,
                   List<AvisoViagem> avisos, List<CarteiraDigital> carteiras, List<Parcela> parcelas,
                   Integer limite, Renegociacao renegociacao, Vencimento vencimento, Proposta proposta) {
