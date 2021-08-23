@@ -6,7 +6,7 @@ import br.com.zupacademy.proposta.dto.response.BloqueioResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "cartoesClient",url = "${API_CARTOES_URL:http://localhost:8888/api}")
+@FeignClient(name = "cartoesClient",url = "${api.cartoes.url}")
 public interface CartoesClient {
     @GetMapping("/cartoes")
     ApiCartaoResponse salvaNumeroCartao(@RequestParam String idProposta);
