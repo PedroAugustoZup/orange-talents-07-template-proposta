@@ -1,9 +1,11 @@
 package br.com.zupacademy.proposta.service;
 
 import br.com.zupacademy.proposta.clients.CartoesClient;
+import br.com.zupacademy.proposta.dto.requeste.AvisoRequest;
 import br.com.zupacademy.proposta.dto.requeste.BloqueioRequest;
 import br.com.zupacademy.proposta.dto.response.ApiCartaoResponse;
 import br.com.zupacademy.proposta.dto.response.BloqueioResponse;
+import br.com.zupacademy.proposta.model.AvisoViagem;
 import br.com.zupacademy.proposta.model.Bloqueio;
 import br.com.zupacademy.proposta.model.Cartao;
 import br.com.zupacademy.proposta.model.Proposta;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @EnableScheduling
@@ -64,5 +68,17 @@ public class CartaoApiService {
             return 200;
         }
         return 400;
+    }
+
+    public int avisoViagem(String usuario, String ipAddress, Cartao cartao, @Valid AvisoRequest request) {
+        Map<String, String> retorno = cartoesClient.avisoViagem(cartao.getNumeroCartao(),
+                request);
+        if(!retorno.get("resultado").equals("CRIADO")) return 400;
+
+        AvisoViagem avisoViagem = request.toModel(usuario, ipAddress,cartao);
+        transactional.execute(()->{
+            manager.persist(avisoViagem);
+        });
+        return 200;
     }
 }

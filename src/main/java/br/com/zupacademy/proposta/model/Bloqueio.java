@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
 @Entity
 public class Bloqueio {
@@ -12,7 +17,7 @@ public class Bloqueio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String idBloqueio;
-    private Instant bloqueadoEm;
+    private String bloqueadoEm;
     private String sistemaResponsavel;
     private boolean ativo;
     @ManyToOne
@@ -35,7 +40,12 @@ public class Bloqueio {
         this.cartao = cartao;
         this.userCliente = usuario;
         this.ipCliente = ipAddress;
-        this.bloqueadoEm = Instant.now();
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                        .withLocale( Locale.UK )
+                        .withZone( ZoneId.systemDefault() );
+        DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
+        this.bloqueadoEm = formatter.format(Instant.now());
     }
 
 
@@ -43,7 +53,7 @@ public class Bloqueio {
         return idBloqueio;
     }
 
-    public Instant getBloqueadoEm() {
+    public String getBloqueadoEm() {
         return bloqueadoEm;
     }
 

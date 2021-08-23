@@ -43,14 +43,12 @@ public class Cartao {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Cartao(String id, String emitidoEm, String titular, List<Bloqueio> bloqueios,
-                  List<AvisoViagem> avisos, List<CarteiraDigital> carteiras, List<Parcela> parcelas,
+    public Cartao(String id, String emitidoEm, String titular, List<CarteiraDigital> carteiras,
+                  List<Parcela> parcelas,
                   Integer limite, Renegociacao renegociacao, Vencimento vencimento, Proposta proposta) {
         this.id = id;
         this.emitidoEm = emitidoEm;
         this.titular = titular;
-        this.bloqueios = bloqueios;
-        this.avisos = avisos;
         this.carteiras = carteiras;
         this.parcelas = parcelas;
         this.limite = limite;

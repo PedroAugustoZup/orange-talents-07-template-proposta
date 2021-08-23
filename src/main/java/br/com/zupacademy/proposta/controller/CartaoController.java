@@ -1,9 +1,9 @@
 package br.com.zupacademy.proposta.controller;
 
+import br.com.zupacademy.proposta.dto.requeste.AvisoRequest;
 import br.com.zupacademy.proposta.dto.requeste.BiometriaRequest;
 import br.com.zupacademy.proposta.model.Biometria;
 import br.com.zupacademy.proposta.model.Cartao;
-import br.com.zupacademy.proposta.repository.BiometriaRepository;
 import br.com.zupacademy.proposta.repository.CartaoRepository;
 import br.com.zupacademy.proposta.service.CartaoApiService;
 import br.com.zupacademy.proposta.service.TransactionalEvent;
@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,9 +29,6 @@ public class CartaoController {
     private CartaoRepository cartaoRepository;
 
     @Autowired
-    private BiometriaRepository biometriaRepository;
-
-    @Autowired
     private TransactionalEvent transactionalEvent;
 
     @Autowired
@@ -37,6 +36,9 @@ public class CartaoController {
 
     @Autowired
     private HttpServletRequest servletRequest;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @PostMapping("/{id}/biometria")
     public ResponseEntity<?> salvaBiometria(@PathVariable("id") Long id,
@@ -51,7 +53,7 @@ public class CartaoController {
         Biometria biometriaEntidade = request.toModel();
         biometriaEntidade.setCartao(cartao.get());
         transactionalEvent.execute(()->{
-            biometriaRepository.save(biometriaEntidade);
+            manager.persist(biometriaEntidade);
         });
         URI uri = uriBuilder.path("/biometria/lista/{id}").buildAndExpand(biometriaEntidade.getId()).toUri();
         return ResponseEntity.created(uri).build();
@@ -66,6 +68,19 @@ public class CartaoController {
         String ipAddress = servletRequest.getRemoteAddr();
 
         return ResponseEntity.status(cartaoService.bloqueiaCartao(cartao.get(), usuario, ipAddress))
+                .build();
+    }
+
+    @PostMapping("/{id}/aviso")
+    public ResponseEntity<?> avisoViagem(@PathVariable("id") @Valid @NotNull Long id,
+                                         @RequestBody @Valid AvisoRequest request){
+        Optional<Cartao> cartao = cartaoRepository.findById(id);
+        if(cartao.isEmpty()) return ResponseEntity.status(404).build();
+
+        String usuario = servletRequest.getHeader("User-Agent");
+        String ipAddress = servletRequest.getRemoteAddr();
+
+        return ResponseEntity.status(cartaoService.avisoViagem(usuario, ipAddress,cartao.get(), request))
                 .build();
     }
 }

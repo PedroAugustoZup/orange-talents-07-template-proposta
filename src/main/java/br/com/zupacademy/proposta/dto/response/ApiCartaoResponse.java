@@ -42,6 +42,6 @@ public class ApiCartaoResponse {
 
 
     public Cartao toModel(Proposta proposta) {
-        return new Cartao(id, emitidoEm, titular, bloqueios, avisos, carteiras, parcelas, limite, renegociacao, vencimento, proposta);
+        return new Cartao(id, emitidoEm, titular, carteiras, parcelas, limite, renegociacao, vencimento, proposta);
     }
 }
