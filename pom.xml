@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.3</version>
+		<version>2.3.12.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.zupacademy</groupId>
@@ -15,7 +15,6 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
-		<spring.cloud-version>2020.0.3</spring.cloud-version>
 		<keycloak.version>15.0.1</keycloak.version>
 	</properties>
 	<dependencies>
@@ -68,6 +67,11 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>
+			<version>3.3.1</version>
+		</dependency>
 <!--		Validador Base64-->
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -80,7 +84,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring.cloud-version}</version>
+				<version>Hoxton.SR12</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
