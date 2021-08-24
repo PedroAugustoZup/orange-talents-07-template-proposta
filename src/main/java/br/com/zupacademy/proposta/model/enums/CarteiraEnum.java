@@ -1,7 +1,7 @@
 package br.com.zupacademy.proposta.model.enums;
 
 public enum CarteiraEnum {
-    PAYPAL("paypal");
+    PAYPAL("paypal"), SAMSUNGPAY("samsung pay");
     private String descricao;
 
     CarteiraEnum(String descricao) {

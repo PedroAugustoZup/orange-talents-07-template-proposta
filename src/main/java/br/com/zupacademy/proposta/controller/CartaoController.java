@@ -98,8 +98,8 @@ public class CartaoController {
         HttpStatus status = cartaoService.associaCarteira(cartao.get(), carteira);
         if(!status.equals(HttpStatus.CREATED)) return ResponseEntity.status(status).build();
 
-        String uri = uriBuilder.path("/cartao/{id}/carteira").buildAndExpand(carteira.getIdPk())
-                .toUriString();
-        return ResponseEntity.status(status).header("Location", uri).build();
+        URI uri = uriBuilder.path("/cartao/{id}/carteira").buildAndExpand(carteira.getIdPk())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 }
