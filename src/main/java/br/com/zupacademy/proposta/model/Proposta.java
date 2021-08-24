@@ -70,7 +70,7 @@ public class Proposta {
                     .getResultadoSolicitacao()
                     .getEnums();
             this.estadoProposta = estado;
-        }catch (FeignException e){
+        }catch (FeignException.UnprocessableEntity e){
             this.estadoProposta = EstadoProposta.NAO_ELEGIVEL;
         }
     }

@@ -20,4 +20,7 @@ public interface CartoesClient {
 
     @PostMapping("/cartoes/{id}/avisos")
     Map<String, String> avisoViagem(@PathVariable("id") String id, @RequestBody @Valid AvisoRequest request);
+
+    @PostMapping("/cartoes/{id}/carteiras")
+    Map<String, String> associaCarteira(@PathVariable("id") String id, @RequestBody Map<String, String> request);
 }

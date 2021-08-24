@@ -2,13 +2,16 @@ package br.com.zupacademy.proposta.controller;
 
 import br.com.zupacademy.proposta.dto.requeste.AvisoRequest;
 import br.com.zupacademy.proposta.dto.requeste.BiometriaRequest;
+import br.com.zupacademy.proposta.dto.requeste.CarteiraRequest;
 import br.com.zupacademy.proposta.model.Biometria;
 import br.com.zupacademy.proposta.model.Cartao;
+import br.com.zupacademy.proposta.model.CarteiraDigital;
 import br.com.zupacademy.proposta.repository.CartaoRepository;
 import br.com.zupacademy.proposta.service.CartaoApiService;
 import br.com.zupacademy.proposta.service.TransactionalEvent;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -82,5 +85,21 @@ public class CartaoController {
 
         return ResponseEntity.status(cartaoService.avisoViagem(usuario, ipAddress,cartao.get(), request))
                 .build();
+    }
+
+    @PostMapping("/{id}/carteira")
+    public ResponseEntity<?> associaCarteira(@PathVariable("id") @Valid @NotNull Long id,
+                                             @RequestBody @Valid CarteiraRequest request,
+                                             UriComponentsBuilder uriBuilder){
+        Optional<Cartao> cartao = cartaoRepository.findById(id);
+        if(cartao.isEmpty()) return ResponseEntity.status(404).build();
+
+        CarteiraDigital carteira = request.toModel();
+        HttpStatus status = cartaoService.associaCarteira(cartao.get(), carteira);
+        if(!status.equals(HttpStatus.CREATED)) return ResponseEntity.status(status).build();
+
+        String uri = uriBuilder.path("/cartao/{id}/carteira").buildAndExpand(carteira.getIdPk())
+                .toUriString();
+        return ResponseEntity.status(status).header("Location", uri).build();
     }
 }

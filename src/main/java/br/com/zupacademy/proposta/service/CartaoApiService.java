@@ -5,13 +5,12 @@ import br.com.zupacademy.proposta.dto.requeste.AvisoRequest;
 import br.com.zupacademy.proposta.dto.requeste.BloqueioRequest;
 import br.com.zupacademy.proposta.dto.response.ApiCartaoResponse;
 import br.com.zupacademy.proposta.dto.response.BloqueioResponse;
-import br.com.zupacademy.proposta.model.AvisoViagem;
-import br.com.zupacademy.proposta.model.Bloqueio;
-import br.com.zupacademy.proposta.model.Cartao;
-import br.com.zupacademy.proposta.model.Proposta;
+import br.com.zupacademy.proposta.model.*;
 import br.com.zupacademy.proposta.model.enums.EstadoProposta;
 import br.com.zupacademy.proposta.repository.PropostaRepository;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -53,9 +52,9 @@ public class CartaoApiService {
         });
     }
 
-    public int bloqueiaCartao(Cartao cartao, String usuario, String ipAddress){
+    public HttpStatus bloqueiaCartao(Cartao cartao, String usuario, String ipAddress){
         for (Bloqueio bloqueio : cartao.getBloqueios()) {
-            if(bloqueio.isAtivo()) return 422;
+            if(bloqueio.isAtivo()) return HttpStatus.UNPROCESSABLE_ENTITY;
         }
         BloqueioResponse response = cartoesClient.geraBloqueioCartao(cartao.getNumeroCartao(),
                 new BloqueioRequest("proposta"));
@@ -65,20 +64,36 @@ public class CartaoApiService {
             transactional.execute(()->{
                 manager.persist(bloqueio);
             });
-            return 200;
+            return HttpStatus.OK;
         }
-        return 400;
+        return HttpStatus.BAD_REQUEST;
     }
 
-    public int avisoViagem(String usuario, String ipAddress, Cartao cartao, @Valid AvisoRequest request) {
+    public HttpStatus avisoViagem(String usuario, String ipAddress, Cartao cartao, @Valid AvisoRequest request) {
         Map<String, String> retorno = cartoesClient.avisoViagem(cartao.getNumeroCartao(),
                 request);
-        if(!retorno.get("resultado").equals("CRIADO")) return 400;
+        if(!retorno.get("resultado").equals("CRIADO")) return HttpStatus.BAD_REQUEST;
 
         AvisoViagem avisoViagem = request.toModel(usuario, ipAddress,cartao);
         transactional.execute(()->{
             manager.persist(avisoViagem);
         });
-        return 200;
+        return HttpStatus.OK;
+    }
+
+    public HttpStatus associaCarteira(Cartao cartao, CarteiraDigital carteira) {
+        try {
+            Map<String, String> retorno = cartoesClient.associaCarteira(cartao.getNumeroCartao(),
+                    Map.of("email", carteira.getEmail(), "carteira", carteira.getEmissor()));
+            if(!retorno.get("resultado").equals("ASSOCIADA")) return HttpStatus.BAD_REQUEST;
+            carteira.setIdCarteiraDigital(retorno.get("id"));
+        }catch (FeignException.UnprocessableEntity e){
+            return HttpStatus.UNPROCESSABLE_ENTITY;
+        }
+        transactional.execute(()->{
+            carteira.setCartao(cartao);
+            manager.persist(carteira);
+        });
+        return HttpStatus.CREATED;
     }
 }

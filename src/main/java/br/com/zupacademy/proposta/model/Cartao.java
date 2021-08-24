@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Cartao {
@@ -22,7 +24,7 @@ public class Cartao {
     private List<AvisoViagem> avisos = new ArrayList<>();
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
-    private List<CarteiraDigital> carteiras = new ArrayList<>();
+    private Set<CarteiraDigital> carteiras = new HashSet<>();
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
     private List<Parcela> parcelas = new ArrayList<>();
@@ -43,7 +45,7 @@ public class Cartao {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Cartao(String id, String emitidoEm, String titular, List<CarteiraDigital> carteiras,
+    public Cartao(String id, String emitidoEm, String titular, Set<CarteiraDigital> carteiras,
                   List<Parcela> parcelas,
                   Integer limite, Renegociacao renegociacao, Vencimento vencimento, Proposta proposta) {
         this.id = id;
@@ -81,7 +83,7 @@ public class Cartao {
         return avisos;
     }
 
-    public List<CarteiraDigital> getCarteiras() {
+    public Set<CarteiraDigital> getCarteiras() {
         return carteiras;
     }
 

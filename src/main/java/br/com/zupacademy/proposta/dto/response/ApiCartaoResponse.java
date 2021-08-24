@@ -2,7 +2,9 @@ package br.com.zupacademy.proposta.dto.response;
 
 import br.com.zupacademy.proposta.model.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ApiCartaoResponse {
 
@@ -11,7 +13,7 @@ public class ApiCartaoResponse {
     private String titular;
     private List<Bloqueio> bloqueios;
     private List<AvisoViagem> avisos;
-    private List<CarteiraDigital> carteiras;
+    private Set<CarteiraDigital> carteiras = new HashSet<>();
     private List<Parcela> parcelas;
     private Integer limite;
     private Renegociacao renegociacao;
@@ -20,7 +22,7 @@ public class ApiCartaoResponse {
 
 
     public ApiCartaoResponse(String id, String emitidoEm, String titular, List<Bloqueio> bloqueios,
-                             List<AvisoViagem> avisos, List<CarteiraDigital> carteiras,
+                             List<AvisoViagem> avisos, Set<CarteiraDigital> carteiras,
                              List<Parcela> parcelas, Integer limite, Renegociacao renegociacao,
                              Vencimento vencimento, String idProposta) {
         this.id = id;
