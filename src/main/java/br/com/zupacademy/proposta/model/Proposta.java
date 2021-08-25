@@ -1,10 +1,10 @@
 package br.com.zupacademy.proposta.model;
 
 import br.com.zupacademy.proposta.clients.AnaliseFinanceiraClient;
-import br.com.zupacademy.proposta.config.validator.bean.Document;
 import br.com.zupacademy.proposta.dto.requeste.VerificaFinanceiroRequest;
 import br.com.zupacademy.proposta.model.enums.EstadoProposta;
 import br.com.zupacademy.proposta.repository.PropostaRepository;
+import br.com.zupacademy.proposta.utils.ConverterDocumentoCriptografado;
 import feign.FeignException;
 
 import javax.persistence.*;
@@ -22,8 +22,8 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Document
+    @NotNull
+    @Convert(converter = ConverterDocumentoCriptografado.class)
     private String documento;
 
     @NotBlank
@@ -108,6 +108,7 @@ public class Proposta {
     }
 
     public boolean verificaDocumentoExistente(PropostaRepository propostaRepository) {
-        return propostaRepository.findByDocumento(this.documento).isPresent();
+        return propostaRepository.findByDocumento(this.documento)
+                .isPresent();
     }
 }

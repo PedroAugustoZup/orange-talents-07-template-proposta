@@ -16,6 +16,7 @@ services:
       AUTH_SERVER_URL: http://keycloak:8080/auth
       AUTH_SERVER_CLIENT: proposta-api-container
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+      PASSWORD_ENCRYPT: 42308de998c048e99f1906589bf0e878
   db:
     image: mysql
     container_name: mysql
